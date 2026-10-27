@@ -5,6 +5,11 @@ import java.util.List;
 import icc.pap.u1.patrones.creacionales.PrototypeDemo;
 import icc.pap.u1.patrones.creacionales.builder.Pizza;
 import icc.pap.u1.patrones.creacionales.builder.PizzaBuilder;
+import icc.pap.u1.patrones.creacionales.practica.gestionpedidos.configuracion.ConfiguracionSistema;
+import icc.pap.u1.patrones.creacionales.practica.gestionpedidos.creadores.CreadorEnLinea;
+import icc.pap.u1.patrones.creacionales.practica.gestionpedidos.creadores.CreadorPedido;
+import icc.pap.u1.patrones.creacionales.practica.gestionpedidos.creadores.CreadorPresencial;
+import icc.pap.u1.patrones.creacionales.practica.gestionpedidos.pedidos.Pedido;
 import icc.pap.u1.patrones.creacionales.prototype.PlantillaEmail;
 import icc.pap.u1.patrones.factoryMethod.Importador;
 import icc.pap.u1.patrones.factoryMethod.ImportadorPuntoComa;
@@ -14,37 +19,65 @@ public class App {
 
     public static void main(String[] args) {
         // runPrototype();
-       //runFactoryMethod();
-        runPrototype();
-        runBuider();
+        // runFactoryMethod();
+        // runPrototype();
+        // runBuider();
+        runGestionPedidos();
 
     }
 
-    private static void runBuider() {
-        Pizza pizza = new PizzaBuilder()
-        .addIngrediente("Salchicha")
-        .setSize("Large")
-        .addIngrediente("Queso")
-        .addIngrediente("Salami").build();
-        System.out.println(pizza.descripcion());
+    private static void runGestionPedidos() {
+        ConfiguracionSistema impuesto = ConfiguracionSistema.getGlobal();
+        impuesto.setImpuestos(15.0);
+
+        System.out.println();
+        System.out.println("Configuración del sistema Impuesto: " + impuesto.getImpuestos() + "%");
+        System.out.println();
+
+        CreadorPedido presencial = new CreadorPresencial();
+        Pedido pedido1 = presencial.crearPedido("P001", "Ana Torres", 100.0);
+        System.out.println("--- Pedido presencial --- Código: P001");
+        System.out.println();
+        pedido1.procesar();
+        System.out.println();
+        CreadorPedido linea = new CreadorEnLinea();
+        Pedido pedido2 = linea.crearPedido("P002", "Juan Perez", 200.0);
+        System.out.println("--- Pedido linea --- Código: P002");
+        System.out.println();
+        pedido2.procesar();
+        System.out.println();
+
+        ConfiguracionSistema impuesto2 = ConfiguracionSistema.getGlobal();
+        boolean igual = (impuesto == impuesto2);
+        System.out.println("Configuracion compartida: " + igual);
+
     }
 
-    private static void runPrototype() {
-        PlantillaEmail pEmail = new PlantillaEmail("Aviso", "Pedido Listo");
-        PlantillaEmail pEmailSolicitud = pEmail.clone();
-        pEmailSolicitud.cambiarAsunto("Solicitud");
-        System.out.println(pEmail);
-        System.out.println(pEmailSolicitud.contenido());
+    // private static void runBuider() {
+    // Pizza pizza = new PizzaBuilder()
+    // .addIngrediente("Salchicha")
+    // .setSize("Large")
+    // .addIngrediente("Queso")
+    // .addIngrediente("Salami").build();
+    // System.out.println(pizza.descripcion());
+    // }
 
-    }
+    // private static void runPrototype() {
+    // PlantillaEmail pEmail = new PlantillaEmail("Aviso", "Pedido Listo");
+    // PlantillaEmail pEmailSolicitud = pEmail.clone();
+    // pEmailSolicitud.cambiarAsunto("Solicitud");
+    // System.out.println(pEmail);
+    // System.out.println(pEmailSolicitud.contenido());
+
+    // }
 
     // private static void runFactoryMethod() {
-    //     Importador impPC = new ImportadorPuntoComa();
-    //     Importador impT = new ImportadorTabulacion();
-    //     // implemeto el crearLector()
-    //     // para devolver LecturaPuntoComa
-    //     System.out.println(impPC.importacion(List.of("S01;22.5;C", "S02;18;C")));
-    //     System.out.println(impT.importacion(List.of("S01\t22\tC", "S02\t18\tC")));
+    // Importador impPC = new ImportadorPuntoComa();
+    // Importador impT = new ImportadorTabulacion();
+    // // implemeto el crearLector()
+    // // para devolver LecturaPuntoComa
+    // System.out.println(impPC.importacion(List.of("S01;22.5;C", "S02;18;C")));
+    // System.out.println(impT.importacion(List.of("S01\t22\tC", "S02\t18\tC")));
     // }
 
     // private static void runPrototype() {
